@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import organizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import organizer
 
 st.sidebar.title("Analyze Qualitative Data using AI")
 
@@ -31,26 +31,32 @@ if uploaded_file is not None:
     subreddit.insert(0,"Overall")
     option = st.sidebar.selectbox("Select Subreddit", subreddit)
 
+    model = st.sidebar.radio("Select Model", ("VADAR", "BERTopic"))
+
     if st.sidebar.button("Show Analysis"):
         data = organizer.fetch_data(option,data)
+        if model == 'VADAR':
+            data['Title_Sentiment'] = data['Title'].apply(sentiment_analyzer_scores)
 
-        data['Title_Sentiment'] = data['Title'].apply(sentiment_analyzer_scores)
+            st.title("Sentiment Analysis")
         
-        st.title("Sentiment Analysis")
-        
-        st.header("Overall Sentiment Analysis")
-        fig, ax = plt.subplots()
-        ax.pie(data['Title_Sentiment'].value_counts(), labels = data['Title_Sentiment'].value_counts().index, autopct='%1.1f%%')
-        st.pyplot(fig)
-        
-        st.header("Sentiment Analysis by Subreddit")
-        fig, ax = plt.subplots()
-        ax = sns.countplot(x='Subreddit', hue='Title_Sentiment', data=data)
-        plt.xticks(rotation=90)
-        st.pyplot(fig)
+            st.header("Overall Sentiment Analysis")
+            fig, ax = plt.subplots()
+            ax.pie(data['Title_Sentiment'].value_counts(), labels = data['Title_Sentiment'].value_counts().index, autopct='%1.1f%%')
+            st.pyplot(fig)
+            
+            st.header("Sentiment Analysis by Subreddit")
+            fig, ax = plt.subplots()
+            ax = sns.countplot(x='Subreddit', hue='Title_Sentiment', data=data)
+            plt.xticks(rotation=90)
+            st.pyplot(fig)
 
-        st.header("Sentiment counts by Subreddit")
-        sentiment_counts = data['Title_Sentiment'].groupby(data['Subreddit']).value_counts().unstack().fillna(0)
-        sentiment_counts_df = sentiment_counts.reset_index()
-        sentiment_counts_df.columns.name = None
-        st.write(sentiment_counts_df)
+            st.header("Sentiment counts by Subreddit")
+            sentiment_counts = data['Title_Sentiment'].groupby(data['Subreddit']).value_counts().unstack().fillna(0)
+            sentiment_counts_df = sentiment_counts.reset_index()
+            sentiment_counts_df.columns.name = None
+            st.write(sentiment_counts_df)
+        else:
+            data = organizer.bertopic(data)
+
+        
