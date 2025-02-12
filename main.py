@@ -2,13 +2,14 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from bertopic import BERTopic
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import organizer
 
 st.sidebar.title("Analyze Qualitative Data using AI")
 
-analyzer = SentimentIntensityAnalyzer()
 def sentiment_analyzer_scores(text):
+    analyzer = SentimentIntensityAnalyzer()
     scores = analyzer.polarity_scores(text)
     if scores['compound'] >= 0.05 :
         Sentiment = 'Positive'
@@ -17,6 +18,14 @@ def sentiment_analyzer_scores(text):
     else :
         Sentiment = 'Neutral'
     return Sentiment
+
+
+def bertopic(data):
+    topic_model = BERTopic()
+    topics, probabilities = topic_model.fit_transform(data['Title'])
+    data['Title_Topic'] = topics
+    data['Title_Probability'] = probabilities
+    return data
 
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
@@ -57,6 +66,7 @@ if uploaded_file is not None:
             sentiment_counts_df.columns.name = None
             st.write(sentiment_counts_df)
         else:
-            data = organizer.bertopic(data)
+            #data = organizer.bertopic(data)
+            st.title("BERTopic")
 
         
