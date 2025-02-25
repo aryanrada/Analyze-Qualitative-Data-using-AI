@@ -2,23 +2,14 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from bertopic import BERTopic
-import spacy
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import torch
+from io import BytesIO
 import organizer
+import algorithms
+
+torch.classes.__path__ = []
 
 st.sidebar.title("Analyze Qualitative Data using AI")
-
-def sentiment_analyzer_scores(text):
-    analyzer = SentimentIntensityAnalyzer()
-    scores = analyzer.polarity_scores(text)
-    if scores['compound'] >= 0.05 :
-        Sentiment = 'Positive'
-    elif scores['compound'] <= -0.05 :
-        Sentiment = 'Negative'
-    else :
-        Sentiment = 'Neutral'
-    return Sentiment
 
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
@@ -39,14 +30,28 @@ if uploaded_file is not None:
         data = organizer.fetch_data(option,data)
 
         if model == 'VADAR':
-            data['Title_Sentiment'] = data['Title'].apply(sentiment_analyzer_scores)
-
+            data['Title_Sentiment'] = data['Title'].apply(algorithms.sentiment_analyzer)
             st.title("Sentiment Analysis")
         
             st.header("Overall Sentiment Analysis")
             fig, ax = plt.subplots()
             ax.pie(data['Title_Sentiment'].value_counts(), labels = data['Title_Sentiment'].value_counts().index, autopct='%1.1f%%')
             st.pyplot(fig)
+
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            buf.seek(0)
+
+            with open("chart.png", "wb") as f:
+                f.write(buf.getvalue())
+
+            with open("chart.png", "rb") as file:
+                st.download_button(
+                    label="Download Chart",
+                    data=file,
+                    file_name="chart.png",
+                    mime="image/png",
+                )
             
             st.header("Sentiment Analysis by Subreddit")
             fig, ax = plt.subplots()
@@ -60,50 +65,91 @@ if uploaded_file is not None:
             sentiment_counts_df.columns.name = None
             st.write(sentiment_counts_df)
 
+            csv = organizer.convert_df(sentiment_counts_df)
+            st.download_button(
+                label="Download data",
+                data=csv,
+                file_name="data.csv",
+                mime="text/csv",
+            )
+
         elif model == "BERTopic":
-            #data = organizer.bertopic(data)
             st.title("BERTopic")
-            topic_model = BERTopic()
-            topics, probabilities = topic_model.fit_transform(data["Title"])
-            data['Title_Topic'] = topics
-            data['Title_Probability'] = probabilities
+            topic_model, data = algorithms.bertopic(data)
             topic_data = topic_model.get_topic_info()
             topic_hierarchy = topic_model.visualize_hierarchy()
             topic_visual = topic_model.visualize_topics()
             st.header("Analyzed data")
             st.write(topic_data)
+
+            csv = organizer.convert_df(topic_data)
+            st.download_button(
+                label="Download data",
+                data=csv,
+                file_name="data.csv",
+                mime="text/csv",
+            )
+
             st.header("Visual Representation")
-            st.write(topic_visual)
+            #st.write(topic_visual)
+
+            fig, ax = plt.subplots()
+            topic_visual.write_image(ax)
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            buf.seek(0)
+
+            with open("chart.png", "wb") as f:
+                f.write(buf.getvalue())
+
+            with open("chart.png", "rb") as file:
+                st.download_button(
+                    label="Download Chart",
+                    data=file,
+                    file_name="chart.png",
+                    mime="image/png",
+                )
+
+            st.header("Topic Hierarchy")
             st.write(topic_hierarchy)
 
         elif model == "Spacy NER":
-            model = spacy.load("en_core_web_sm")
-
-            def ner(text):
-                doc = model(text)
-                entities = []
-                for ent in doc.ents:
-                    entities.append((ent.text, ent.label_))
-                return entities
-            
-            data['entities'] = data['Title'].apply(ner)
-
-            ner_data = []
-            for index, row in data.iterrows():
-                text = row['Title']
-                for entity, entity_type in row['entities']:
-                    ner_data.append([text, entity, entity_type])
-
-            ner_data = pd.DataFrame(ner_data, columns=['text', 'entity', 'entity_type'])
-
             st.title("Spacy NER")
+
+            data = algorithms.spacy_ner(data)
+
             st.header("Analyzed data")
-            st.write(ner_data)
+            st.write(data)
+
+            csv = organizer.convert_df(data)
+            st.download_button(
+                label="Download data",
+                data=csv,
+                file_name="data.csv",
+                mime="text/csv",
+            )
 
             st.header("Graphical Representation")
-            entity_count = ner_data["entity_type"].value_counts()
+            entity_count = pd.DataFrame(data["entity_type"].value_counts())
+            #st.write(entity_count)
             fig, ax = plt.subplots()
-            ax.bar(entity_count)
+            ax.bar(entity_count.index, entity_count.values.flatten())
+            plt.xticks(rotation=90)
             st.pyplot(fig)
+
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            buf.seek(0)
+
+            with open("chart.png", "wb") as f:
+                f.write(buf.getvalue())
+
+            with open("chart.png", "rb") as file:
+                st.download_button(
+                    label="Download Chart",
+                    data=file,
+                    file_name="chart.png",
+                    mime="image/png",
+                )
 
         
