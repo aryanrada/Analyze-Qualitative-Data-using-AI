@@ -91,24 +91,24 @@ if uploaded_file is not None:
             )
 
             st.header("Visual Representation")
-            #st.write(topic_visual)
+            st.write(topic_visual)
 
-            fig, ax = plt.subplots()
-            topic_visual.write_image(ax)
-            buf = BytesIO()
-            fig.savefig(buf, format="png")
-            buf.seek(0)
+            # fig, ax = plt.subplots()
+            # topic_visual.write_image(ax)
+            # buf = BytesIO()
+            # fig.savefig(buf, format="png")
+            # buf.seek(0)
 
-            with open("chart.png", "wb") as f:
-                f.write(buf.getvalue())
+            # with open("chart.png", "wb") as f:
+            #     f.write(buf.getvalue())
 
-            with open("chart.png", "rb") as file:
-                st.download_button(
-                    label="Download Chart",
-                    data=file,
-                    file_name="chart.png",
-                    mime="image/png",
-                )
+            # with open("chart.png", "rb") as file:
+            #     st.download_button(
+            #         label="Download Chart",
+            #         data=file,
+            #         file_name="chart.png",
+            #         mime="image/png",
+            #     )
 
             st.header("Topic Hierarchy")
             st.write(topic_hierarchy)
