@@ -14,28 +14,29 @@ st.sidebar.title("Analyze Qualitative Data using AI")
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
     data = pd.read_csv(uploaded_file)
-    data = data.drop(columns=['Unnamed: 0', 'is_Original', 'Flair', 'URL'])
-    data["Title"].fillna("Null", inplace = True)
-    data["Body"].fillna("Null", inplace = True)
-    data["Comments"].fillna("Null", inplace = True)
+    #data = data.drop(columns=['Unnamed: 0', 'is_Original', 'Flair', 'URL'])
+    #data["Title"].fillna("Null", inplace = True)
+    #data["Body"].fillna("Null", inplace = True)
+    #data["Comments"].fillna("Null", inplace = True)
 
-    subreddit = data['Subreddit'].unique().tolist()
-    subreddit.sort()
-    subreddit.insert(0,"Overall")
-    option = st.sidebar.selectbox("Select Subreddit", subreddit)
-
+    #subreddit = data['Subreddit'].unique().tolist()
+    #subreddit.sort()
+    #subreddit.insert(0,"Overall")
+    #option = st.sidebar.selectbox("Select Subreddit", subreddit)
+    data = organizer.clean_dataset(data)
     model = st.sidebar.radio("Select Model", ("VADAR", "BERTopic", "Spacy NER"))
 
     if st.sidebar.button("Show Analysis"):
-        data = organizer.fetch_data(option,data)
+        #data = organizer.fetch_data(option,data)
 
         if model == 'VADAR':
-            data['Title_Sentiment'] = data['Title'].apply(algorithms.sentiment_analyzer)
+            #data['Title_Sentiment'] = data['Title'].apply(algorithms.sentiment_analyzer)
+            data['Text_Sentiment'] = data['text1'].apply(algorithms.sentiment_analyzer)
             st.title("Sentiment Analysis")
         
             st.header("Overall Sentiment Analysis")
             fig, ax = plt.subplots()
-            ax.pie(data['Title_Sentiment'].value_counts(), labels = data['Title_Sentiment'].value_counts().index, autopct='%1.1f%%')
+            ax.pie(data['Text_Sentiment'].value_counts(), labels = data['Text_Sentiment'].value_counts().index, autopct='%1.1f%%')
             st.pyplot(fig)
 
             buf = BytesIO()
@@ -53,14 +54,16 @@ if uploaded_file is not None:
                     mime="image/png",
                 )
             
-            st.header("Sentiment Analysis by Subreddit")
-            fig, ax = plt.subplots()
-            ax = sns.countplot(x='Subreddit', hue='Title_Sentiment', data=data)
-            plt.xticks(rotation=90)
-            st.pyplot(fig)
+            #st.header("Sentiment Analysis by Subreddit")
+            #fig, ax = plt.subplots()
+            #ax = sns.countplot(x='Subreddit', hue='Title_Sentiment', data=data)
+            #ax = sns.countplot(hue='Title_Sentiment', data=data)
+            #plt.xticks(rotation=90)
+            #st.pyplot(fig)
 
             st.header("Sentiment counts by Subreddit")
-            sentiment_counts = data['Title_Sentiment'].groupby(data['Subreddit']).value_counts().unstack().fillna(0)
+            #sentiment_counts = data['Text_Sentiment'].groupby(data['Subreddit']).value_counts().unstack().fillna(0)
+            sentiment_counts = data
             sentiment_counts_df = sentiment_counts.reset_index()
             sentiment_counts_df.columns.name = None
             st.write(sentiment_counts_df)

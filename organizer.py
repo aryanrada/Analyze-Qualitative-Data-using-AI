@@ -1,6 +1,5 @@
-import pandas as pd
-import re
 import base64
+import re
 import streamlit as st
 
 def fetch_data(subreddit,df):
@@ -13,17 +12,22 @@ def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode("utf-8")
 
-def download_file(file_content, file_name, download_label="Download File"):
+def remove_url_columns(data):
     """
-    Creates a download link for a file in a Streamlit app.
+    Removes any column containing URLs from a Pandas DataFrame.
     
-    :param file_content: Content of the file as bytes
-    :param file_name: Name of the file to be downloaded
-    :param download_label: Label for the download button
+    Parameters:
+    data (pd.DataFrame): The input DataFrame.
+    
+    Returns:
+    pd.DataFrame: A DataFrame with URL columns removed.
     """
-    b64 = base64.b64encode(file_content).decode()
-    href = f'<a href="data:file/octet-stream;base64,{b64}" download="{file_name}">{download_label}</a>'
-    st.markdown(href, unsafe_allow_html=True)
+    url_pattern = re.compile(r'https?://\S+|www\.\S+')
+    
+    def is_url_column(series):
+        return series.astype(str).str.contains(url_pattern, na=False).any()
+    
+    return data.loc[:, ~data.apply(is_url_column)]
 
 def is_text_column(column_data):
     """
@@ -50,3 +54,25 @@ def filter_text_columns(df):
     filtered_df = filtered_df.fillna("null")
     
     return filtered_df
+
+def clean_dataset(df):
+    """
+    Removes URL columns and filters text columns from a DataFrame.
+    
+    Parameters:
+    df (pd.DataFrame): Input DataFrame.
+    
+    Returns:
+    pd.DataFrame: A cleaned DataFrame with URL columns removed and only text columns retained.
+    """
+    df = remove_url_columns(df)
+    df = filter_text_columns(df)
+    
+    return df
+
+    #url_pattern = re.compile(r'https?://\S+|www\.\S+')
+
+    #def is_url_column(series):
+    #    return series.astype(str).str.contains(url_pattern, na=False).any()
+    
+    #df = df.loc[:, ~df.apply(is_url_column)]
