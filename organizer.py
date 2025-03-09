@@ -65,7 +65,7 @@ def clean_dataset(df):
     Returns:
     pd.DataFrame: A cleaned DataFrame with URL columns removed and only text columns retained.
     """
-    df = remove_url_columns(df)
+    #df = remove_url_columns(df)
     df = filter_text_columns(df)
     
     return df
