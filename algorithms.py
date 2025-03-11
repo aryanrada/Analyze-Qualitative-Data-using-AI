@@ -16,9 +16,9 @@ def sentiment_analyzer(text):
 
 def bertopic(data):
     topic_model = BERTopic()
-    topics, probabilities = topic_model.fit_transform(data["Title"])
-    data['Title_Topic'] = topics
-    data['Title_Probability'] = probabilities
+    topics, probabilities = topic_model.fit_transform(data['text1'])
+    data['text_Topic'] = topics
+    data['text_Probability'] = probabilities
     return topic_model, data
 
 def spacy_ner(data):
@@ -31,11 +31,11 @@ def spacy_ner(data):
             entities.append((ent.text, ent.label_))
         return entities
     
-    data['entities'] = data['Title'].apply(ner)
+    data['entities'] = data['text1'].apply(ner)
 
     ner_data = []
     for index, row in data.iterrows():
-        text = row['Title']
+        text = row['text1']
         for entity, entity_type in row['entities']:
             ner_data.append([text, entity, entity_type])
 
