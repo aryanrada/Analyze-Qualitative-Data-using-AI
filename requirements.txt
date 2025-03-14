@@ -5,3 +5,5 @@ seaborn
 matplotlib
 bertopic
 spacy
+PyPDF2
+python-docx
