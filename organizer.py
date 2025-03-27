@@ -8,14 +8,8 @@ import unicodedata
 import nltk
 from nltk.corpus import stopwords
 
-#def fetch_data(subreddit,df):
-#    if subreddit != 'Overall':
-#        df = df[df['Subreddit'] == subreddit]
-#    return df
-
 @st.cache_data
 def convert_df(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode("utf-8")
 
 def csv_file(file):
