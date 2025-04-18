@@ -29,11 +29,11 @@
 </ul>
 
 ## Web Application
-![1](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/images/1.jpeg)
-![2](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/images/2.jpeg)
-![3](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/images/3.jpeg)
-![4](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/images/4.jpeg)
-![5](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/images/5.jpeg)
-![6](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/images/6.jpeg)
-![7](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/images/7.jpeg)
-![8](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/images/8.jpeg)
+![1](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/blob/main/images/1.jpeg)
+![2](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/blob/main/images/2.jpeg)
+![3](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/blob/main/images/1.jpeg)
+![4](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/blob/main/images/4.jpeg)
+![5](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/blob/main/images/5.jpeg)
+![6](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/blob/main/images/6.jpeg)
+![7](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/blob/main/images/7.jpeg)
+![8](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/blob/main/images/8.jpeg)
