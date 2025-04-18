@@ -2,6 +2,8 @@
 
 <p>In modern times new data is generated on daily basis across various sectors through customer feedback, surveys, and social media interactions. Which opens various possibility to understand human behaviours. However, analyzing this unstructured data manually is time-consuming, inconsistent, and often fails to uncover deep, actionable insights. Existing tools either oversimplify the complexity of human language or require advanced expertise to operate effectively. This creates a significant gap in the ability of businesses and researchers to fully leverage qualitative data for informed decision-making. There is a pressing need for an AI-driven solution that can efficiently process, interpret, and visualize qualitative information in a meaningful and scalable way.</p>
 
+---
+
 ## Libraries and Tools used
 <ul>
     <li><b>Streamlit:</b> Used to create web application and user interface.
@@ -18,6 +20,8 @@
     <li><b>GitHub:</b> This tool is used to share code between stakeholders and team members.
 </ul>
 
+---
+
 ## Features of Web Application
 <ul>
     <li><b>Upload files:</b> User can upload file that they want to analyse using AI models.
@@ -27,6 +31,8 @@
     <li><b>Graphical Representation:</b> For every model execution there are graphs and charts for the analyzed data, so the user can easily understand.
     <li><b>Export data:</b> After the analysis is complete user can export the analyzed output by downloading the data to local system.
 </ul>
+
+---
 
 ## Web Application
 ![1](https://github.com/aryanrada/Analyze-Qualitative-Data-using-AI/blob/main/images/1.jpeg)
